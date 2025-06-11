@@ -55,6 +55,8 @@ bpy.context.scene.cycles.device = 'GPU'
 
 ```
 
+Please note, that some blends, if they are small enough or does not have enough samples, possibly may NOT utilize multiple GPU's. 
+
 ### Nuances with blender
 Please note, that blender requires an active window to run in this fashion. I would reccomend utilizing the command `tmux` in your terminal to allow you to have multiple windows, and it will prevent you from timeouts after long renders.
 

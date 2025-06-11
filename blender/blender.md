@@ -21,6 +21,8 @@ At this point, I would suggest uploading the files to the server, as it may be l
 
 ## Running a blender render (no SLURM)
 
+Before running your blender renders, ensure that you have blender, CUDA, and nvidia drivers enabled. Use the command `ml avail` to list available modules, and if there exists modules for CUDA, blender, and nvidia drivers that have not been loaded, please load it. 
+
 Here is a basic command to run blender with MULTIPLE GPU's. Below the command is a description of what each of the options do:
 
 <code>blender --python pythonScript.py -b index_of_nearest.blend -o //output/image_#### -F PNG -a</code>
@@ -64,6 +66,14 @@ Additionally, to check that it is using multiple GPU's, utilize the command `nvt
 
 
 ## Running a blender render (with SLURM)
+
+Running blender within a SLURM script is not all too different, with the command being the same, but the syntax of the actual SLURM script including more information for GPU processing. Here is an example SLURM script:
+
+
+SLURM script in progress, view the Ansys guide here for a SLURM script: https://github.com/LUHighPerformanceComputingClub/HPC_Programs/blob/main/ansys_cli/fluent2025R1.md
+
+
+Please note, that in your SLURM script, you MUST load environment variables for blender (if necessary), CUDA, and Nvidia drivers.
 
 
 

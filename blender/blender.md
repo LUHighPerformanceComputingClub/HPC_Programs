@@ -21,7 +21,7 @@ At this point, I would suggest uploading the files to the server, as it may be l
 
 ## Running a blender render (no SLURM)
 
-Here is a basic command to run blender with MULTIPLE GPU's. Below the command is a description of what each of the options do
+Here is a basic command to run blender with MULTIPLE GPU's. Below the command is a description of what each of the options do:
 
 <code>blender --python pythonScript.py -b index_of_nearest.blend -o //output/image_#### -F PNG -a</code>
 
@@ -54,7 +54,16 @@ bpy.context.scene.render.engine = 'CYCLES'
 bpy.context.scene.cycles.device = 'GPU'
 
 ```
+
+### Nuances with blender
+Please note, that blender requires an active window to run in this fashion. I would reccomend utilizing the command `tmux` in your terminal to allow you to have multiple windows, and it will prevent you from timeouts after long renders.
+
+Additionally, to check that it is using multiple GPU's, utilize the command `nvtop` to show GPU utilization on NVIDIA devices, and if that is not installed, `nvidia-smi` can show minimal details as well. 
+
+
 ## Running a blender render (with SLURM)
+
+
 
 
 ## Copying the files back over

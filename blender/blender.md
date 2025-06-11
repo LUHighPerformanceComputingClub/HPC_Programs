@@ -1,5 +1,5 @@
-## Blender Version X.X Guide
-This is a guide that details how to use Blender on an HPC with OpenHPC/lmod. This guide is not absolute and will not work in EVERY environment, but should work in most standard environments. If you have issues, please contact your HPC administrators.
+## Blender Version 3.6 LTS Guide
+This is a guide that details how to use Blender 3.6 LTS on an HPC with OpenHPC/lmod. This guide is not absolute and will not work in EVERY environment, but should work in most standard environments. If you have issues, please contact your HPC administrators.
 
 ## Getting Started
 First, ensure that you have a username and password to ssh into the machine. If you do not have a username and password, contact a member of the HPC administration team for access. 
@@ -21,9 +21,61 @@ At this point, I would suggest uploading the files to the server, as it may be l
 
 ## Running a blender render (no SLURM)
 
+Before running your blender renders, ensure that you have blender, CUDA, and nvidia drivers enabled. Use the command `ml avail` to list available modules, and if there exists modules for CUDA, blender, and nvidia drivers that have not been loaded, please load it. 
+
+Here is a basic command to run blender with MULTIPLE GPU's. Below the command is a description of what each of the options do:
+
+<code>blender --python pythonScript.py -b index_of_nearest.blend -o //output/image_#### -F PNG -a</code>
+
+- `blender`: runs the blender program
+- `--python`: runs the specified python script `pythonScript.py`
+- `-b`: runs blender with no GUI
+- `index_of_nearest.blend`: The specified blender file you want to run, can be any .blend file as long as the versions are compatible
+- `-o //output/image_####`: Creates an output directory called `output` that will have images named image_0001, image_0002, etc.
+- `-F`: Formats the outputted rendered images to the file format `PNG`
+- `-a`: renders all frames of the animation within the .blend file
+
+Here is the pythonScript.py file that is used to utilize multiple GPUs:
+
+```python
+import bpy
+
+# Enable CUDA and multiple GPUs
+
+prefs = bpy.context.preferences
+prefs.addons['cycles'].preferences.compute_device_type = 'CUDA'
+
+# Enable all CUDA devices
+
+for device in prefs.addons['cycles'].preferences.get_devices()[0]:
+        device.use = True
+
+
+# set cycles to use GPU
+bpy.context.scene.render.engine = 'CYCLES'
+bpy.context.scene.cycles.device = 'GPU'
+
+```
+
+Please note, that some blends, if they are small enough or does not have enough samples, possibly may NOT utilize multiple GPU's. 
+
+### Nuances with blender
+Please note, that blender requires an active window to run in this fashion. I would reccomend utilizing the command `tmux` in your terminal to allow you to have multiple windows, and it will prevent you from timeouts after long renders.
+
+Additionally, to check that it is using multiple GPU's, utilize the command `nvtop` to show GPU utilization on NVIDIA devices, and if that is not installed, `nvidia-smi` can show minimal details as well. 
 
 
 ## Running a blender render (with SLURM)
+
+Running blender within a SLURM script is not all too different, with the command being the same, but the syntax of the actual SLURM script including more information for GPU processing. Here is an example SLURM script:
+
+
+SLURM script in progress, view the Ansys guide here for a SLURM script: https://github.com/LUHighPerformanceComputingClub/HPC_Programs/blob/main/ansys_cli/fluent2025R1.md
+
+
+Please note, that in your SLURM script, you MUST load environment variables for blender (if necessary), CUDA, and Nvidia drivers.
+
+
 
 
 ## Copying the files back over

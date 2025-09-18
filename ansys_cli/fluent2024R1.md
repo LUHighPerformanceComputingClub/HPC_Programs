@@ -28,7 +28,11 @@ So, as example, to run fluent 3d with 4 cores, use the following command to star
 ` fluent 3d -g -t4 example.cas`
 
 
-## Fluent with a SLURM job
+## Fluent with SLURM built in
+
+
+
+## Fluent on a SLURM job
 Fluent can, and should, be run with a SLURM job for simulations on an HPC. To run it =with SLURm, there are a few extra requirements that are needed.
 - SLURM job script
 - Journal file for headless start

@@ -29,11 +29,29 @@ So, as example, to run fluent 3d with 4 cores, use the following command to star
 
 
 ## Fluent with SLURM built in
+Fluent should typically be run with SLURM, and in most cases jobs can only be run across nodes with SLURM. SLURM allows users to queue compute jobs in an orderly fashion, utilizing resources effectivley and preventing one user from hogging all the compute resources of a system. Fluent has SLURM functionality built-in, one just needs to know how to call it.
+
+In many systems, aliases are set up in order to run fluent with SLURM to make it easier on the users. Here is how it works on our systems:
 
 
+`fluentSlurm 3d -g -t10 --jobtime=20`
+- `fluentSlurm` is a bash script that does the options for you. The bash script is included at the bottom of this document. 
+- `--jobtime`: Specifies the time that the job needs to run for
+
+
+
+<br><br>
+In other systems, alias are NOT set up, and the user may need to run these options manually. Here is a base example of fluent with SLURM:
+
+`fluent 3d -g -t4 -scheduler=slurm -scheduler_opt="--time=20" -scheduler_opt="--ntasks=4"`
+- `fluent`: the application that is being called
+- `<type>`: The type of fluent that is being run. Options are `2d`,`3d`, `2dpp` (2d double precision), and `3dpp` (3d double precision)
+- `-g`: Run the fluent cli without a GUI (will not run unless this option is specified)
+- `-tNUM`: Run the fluent with a specific number of cores. So for example, if you want to run fluent with 10 cores, it would be `-t10`, or 15 cores would be `-t20`
+- `-scheduler_opt`: Run a slurm sbatch option. For example, `--time` specifies the time in minutes for the job, `--numtasks` specify the number of cores for the SLURM job, and should match the number after t. 
 
 ## Fluent on a SLURM job
-Fluent can, and should, be run with a SLURM job for simulations on an HPC. To run it =with SLURm, there are a few extra requirements that are needed.
+Fluent also can, and should, be run with a SLURM job for simulations on an HPC. To run it =with SLURm, there are a few extra requirements that are needed.
 - SLURM job script
 - Journal file for headless start
 
@@ -100,3 +118,46 @@ To recap, here are the general instructions that will have to be followed:
 - Upload .cas files to the server so that it can be solved
 - Run the ansys fluent application on the HPC through the CLI or a SLURM script (reccomended to do the SLURM script)
 
+
+## Bash Scripts
+
+
+### slurmFluent.sh
+```bash
+#!/bin/bash
+
+# Defaults
+MPI=openmmpi
+NUM_CORES=2   # default if -t not given
+JobTime=3
+MinTime=1
+
+# New array to hold args (minus custom flags we parse ourselves)
+PASSTHRU_ARGS=()
+
+# Parse command line args
+for arg in "$@"; do
+    if [[ $arg =~ ^-t([0-9]+)$ ]]; then
+        NUM_CORES="${BASH_REMATCH[1]}"
+        PASSTHRU_ARGS+=("$arg")
+    elif [[ $arg =~ ^--jobtime=([0-9]+)$ ]]; then
+        JobTime="${BASH_REMATCH[1]}"
+        # don’t add this to PASSTHRU_ARGS (Fluent doesn’t know it)
+    else
+        PASSTHRU_ARGS+=("$arg")
+    fi
+done
+
+# Debug (optional)
+# echo "NUM_CORES=$NUM_CORES"
+# echo "JobTime=$JobTime"
+
+# Launch Fluent with Slurm defaults + cleaned user args
+fluent "${PASSTHRU_ARGS[@]}" \
+    -pib \
+    -scheduler=slurm \
+    -scheduler_nodeonly \
+    -scheduler_opt="--time=$JobTime" \
+    -scheduler_opt="--ntasks=$NUM_CORES"
+
+```

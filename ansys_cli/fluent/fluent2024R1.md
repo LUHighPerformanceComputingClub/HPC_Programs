@@ -1,5 +1,5 @@
-# Ansys 2024 R1 Guide
-This is a guide that details how to use Ansys 2024 R1 on a HPC with lmod enabled. Note that this guide is subject to change in the future, and may not work for every server. Please look throughout the guide for the information that you need, and also **PLEASE look at the section which describes how to run fluent with a SLURM job. MOST OF THE TIME YOU WILL BE USING A SLURM JOB**
+# Ansys 2024 R1 CLI Guide
+This is a guide that details how to use Ansys Fluent 2024 R1 on a HPC with lmod enabled. Note that this guide is subject to change in the future, and may not work for every server. Please look throughout the guide for the information that you need, and also **PLEASE look at the section which describes how to run fluent with a SLURM job. MOST OF THE TIME YOU WILL BE USING A SLURM JOB**
 
 
 ## Getting Started

@@ -16,4 +16,4 @@ Please note that at the moment of writing, there have been issues with running m
 
 5. Run ansys mechanical from the cli. `ansys252 -b -machines cXX:48 < input.dat > output.out` . This command will run this on node cXX (put the hostname there), using 48 cores (the number after the colon), using your input data, and output it to your output.out file. 
 
-6. If you want to leave this simulation running and exit ssh, press Ctrl B , then press D, then type exit in your terminal. If you want to see the results of when you previously did that, type tmux attach and it should reattach that session. (To list all your sessions, type tmux ls, and to reatach a specific one do tmux attach -t sessionid)
+6. If you want to leave this simulation running and exit ssh, press Ctrl B , then press D, then type exit in your terminal. If you want to see the results of when you previously did that, type tmux attach and it should reattach that session. (To list all your sessions, type `tmux ls`, and to reatach a specific one do `tmux attach -t sessionid`)
